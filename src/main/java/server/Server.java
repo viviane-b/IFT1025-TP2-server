@@ -1,14 +1,15 @@
 package server;
 
 import javafx.util.Pair;
+import server.models.Course;
+import server.models.RegistrationForm;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Server {
 
@@ -91,9 +92,30 @@ public class Server {
      @param arg la session pour laquelle on veut récupérer la liste des cours
      */
     public void handleLoadCourses(String arg) {
-        // TODO: implémenter cette méthode
+        final String filePath = "./src/main/java/server/data/cours.txt";
+
+        try {
+            Scanner s = new Scanner(new File(filePath));
+
+            while (s.hasNextLine()) {
+                String line = s.nextLine();
+                String[] specs = line.split("\t");
+                Course course = new Course(specs[1], specs[0], specs[2]);
+                System.out.println(course);
+                if (course.getSession().equals("arg")) {
+                    // show this course to client
+                }
+
+            //TODO:  renvoyer la liste des cours pour une session au client en utilisant l'objet 'objectOutputStream'.
 
 
+
+
+
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("path " + filePath + "not found.");
+        }
 
     }
 
@@ -104,6 +126,20 @@ public class Server {
      */
     public void handleRegistration() {
         // TODO: implémenter cette méthode
+        try {
+
+            ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
+            RegistrationForm registrationForm = (RegistrationForm) ois.readObject();
+
+            System.out.println(registrationForm.getCourse());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }
 
