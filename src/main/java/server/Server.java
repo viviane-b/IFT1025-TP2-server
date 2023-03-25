@@ -92,6 +92,9 @@ public class Server {
      */
     public void handleLoadCourses(String arg) {
         // TODO: implémenter cette méthode
+
+
+
     }
 
     /**
