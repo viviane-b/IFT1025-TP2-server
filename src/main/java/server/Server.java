@@ -96,25 +96,36 @@ public class Server {
 
         try {
             Scanner s = new Scanner(new File(filePath));
+            ArrayList<Course> courseList = new ArrayList<>();
 
             while (s.hasNextLine()) {
                 String line = s.nextLine();
                 String[] specs = line.split("\t");
                 Course course = new Course(specs[1], specs[0], specs[2]);
+
                 System.out.println(course);
-                if (course.getSession().equals("arg")) {
+
+
+                if (course.getSession().equals(arg)) {
+                    System.out.println("le cours se donne a " + course.getSession());
                     // show this course to client
+                    courseList.add(course);
+
                 }
-
-            //TODO:  renvoyer la liste des cours pour une session au client en utilisant l'objet 'objectOutputStream'.
-
-
-
-
-
             }
+            System.out.println(courseList);
+            s.close();
+
+            objectOutputStream.writeObject(courseList);
+
+
+
         } catch (FileNotFoundException e) {
             System.err.println("path " + filePath + "not found.");
+        } catch (ObjectStreamException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
@@ -128,10 +139,20 @@ public class Server {
         // TODO: implémenter cette méthode
         try {
 
-            ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
-            RegistrationForm registrationForm = (RegistrationForm) ois.readObject();
+            RegistrationForm registrationForm = (RegistrationForm) objectInputStream.readObject();
 
             System.out.println(registrationForm.getCourse());
+            objectOutputStream.writeObject("Confirmation de l'inscription.");
+
+            // Save registration form in a text file
+            File inscription = new File("src/main/java/server/data/inscription.txt");
+            FileWriter fw = new FileWriter(inscription);
+            BufferedWriter writer = new BufferedWriter(fw);
+
+
+            writer.append(registrationForm.getNom());
+            writer.close();
+
 
         } catch (IOException e) {
             e.printStackTrace();
