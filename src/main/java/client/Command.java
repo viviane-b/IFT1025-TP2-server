@@ -11,6 +11,11 @@ public class Command implements Serializable {
         this.arg = arg;
     }
 
+    public String getCmd() {return cmd;}
+    public String getArg() {return arg;}
+
+
+
     @Override
     public String toString() {
         return (cmd + " " + arg);

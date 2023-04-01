@@ -13,7 +13,72 @@ import java.util.Scanner;
 public class Client {
 
     private static final int portNumber = 1337;
+    protected ArrayList<Command> commands;
+    protected ArrayList<Course> courseList;
+    protected Socket cS ;
+    protected ObjectOutputStream oos ;
+    protected ObjectInputStream ois ;
 
+
+    public void run() {
+        try {
+            Socket cS = new Socket("127.0.0.1", portNumber);
+            oos = new ObjectOutputStream(cS.getOutputStream());
+            ois = new ObjectInputStream(cS.getInputStream());
+
+
+            // Send commands to server
+            for (Command command : commands) {
+                System.out.println(command.toString());
+                oos.writeObject(command);
+                if (command.getCmd().equals("CHARGER")) {
+                    load(command.getArg());
+                }
+                if (command.getCmd().equals("INSCRIRE")) {
+                    // for testing
+                    register(new RegistrationForm("Bob", "Smith", "bobsmith@gmail.com", "12345678", new Course("Programmation2", "IFT1025", "Hiver")));
+
+                }
+            }
+
+
+
+        } catch (ConnectException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void load(String session) {
+        try {
+            courseList = (ArrayList<Course>) ois.readObject();
+            System.out.println(courseList);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void register(RegistrationForm registrationForm) {
+        try {
+            // Send registration form to server
+            oos.writeObject(registrationForm);
+            // Receive confirmation message from server
+            System.out.println((String) ois.readObject());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    // TO ERASE (main is in ClientCmdLine)
     public static void main(String[] args) {
 
         try {

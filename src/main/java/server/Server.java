@@ -136,21 +136,26 @@ public class Server {
      La méthode gére les exceptions si une erreur se produit lors de la lecture de l'objet, l'écriture dans un fichier ou dans le flux de sortie.
      */
     public void handleRegistration() {
-        // TODO: implémenter cette méthode
+
         try {
 
             RegistrationForm registrationForm = (RegistrationForm) objectInputStream.readObject();
 
             System.out.println(registrationForm.getCourse());
-            objectOutputStream.writeObject("Confirmation de l'inscription.");
+            objectOutputStream.writeObject("Confirmation de l'inscription au cours " + registrationForm.getCourse().getName() + " pour la session " + registrationForm.getCourse().getSession() + ".");
 
             // Save registration form in a text file
-            File inscription = new File("src/main/java/server/data/inscription.txt");
-            FileWriter fw = new FileWriter(inscription);
+            File inscriptionFile = new File("src/main/java/server/data/inscription.txt");
+            FileWriter fw = new FileWriter(inscriptionFile);
             BufferedWriter writer = new BufferedWriter(fw);
 
-
-            writer.append(registrationForm.getNom());
+            String inscription = new String(registrationForm.getCourse().getSession() + "\t" +
+                    registrationForm.getCourse().getCode() + "\t" +
+                    registrationForm.getMatricule() + "\t" +
+                    registrationForm.getNom() + "\t" +
+                    registrationForm.getPrenom() + "\t" +
+                    registrationForm.getEmail() + "\n");
+            writer.append(inscription);
             writer.close();
 
 
