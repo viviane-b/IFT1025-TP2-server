@@ -113,6 +113,8 @@ public class Server {
             scanner.close();
             objectOutputStream.writeObject(courses);
 
+        } catch (FileNotFoundException e) {
+            System.err.println("path " + COURSES_FILE_PATH + "not found.");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -127,34 +129,32 @@ public class Server {
     public void handleRegistration() {
 
         try {
-
+            // Check if form is valid in the client side
             RegistrationForm registrationForm = (RegistrationForm) objectInputStream.readObject();
 
-            System.out.println(registrationForm.getCourse());
-            objectOutputStream.writeObject("Confirmation de l'inscription au cours " + registrationForm.getCourse().getName() + " pour la session " + registrationForm.getCourse().getSession() + ".");
+//            System.out.println(registrationForm.getCourse());
+            objectOutputStream.writeObject(
+                    "Confirmation de l'inscription au cours " + registrationForm.getCourse().getName()
+                    + " pour la session " + registrationForm.getCourse().getSession() + ".");
 
             // Save registration form in a text file
             File inscriptionFile = new File("src/main/java/server/data/inscription.txt");
             FileWriter fw = new FileWriter(inscriptionFile);
             BufferedWriter writer = new BufferedWriter(fw);
 
-            String inscription = new String(registrationForm.getCourse().getSession() + "\t" +
+            String inscription =
+                    registrationForm.getCourse().getSession() + "\t" +
                     registrationForm.getCourse().getCode() + "\t" +
                     registrationForm.getMatricule() + "\t" +
                     registrationForm.getNom() + "\t" +
                     registrationForm.getPrenom() + "\t" +
-                    registrationForm.getEmail() + "\n");
+                    registrationForm.getEmail() + "\n";
             writer.append(inscription);
             writer.close();
 
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-
     }
 }
 
