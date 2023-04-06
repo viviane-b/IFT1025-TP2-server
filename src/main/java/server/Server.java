@@ -92,43 +92,32 @@ public class Server {
      @param arg la session pour laquelle on veut récupérer la liste des cours
      */
     public void handleLoadCourses(String arg) {
-        final String filePath = "./src/main/java/server/data/cours.txt";
-
+        final String COURSES_FILE_PATH = "src/main/java/server/data/cours.txt";
         try {
-            Scanner s = new Scanner(new File(filePath));
-            ArrayList<Course> courseList = new ArrayList<>();
+            File coursesFile = new File(COURSES_FILE_PATH);
+            Scanner scanner = new Scanner(coursesFile);
+            ArrayList<Course> courses = new ArrayList<Course>();
 
-            while (s.hasNextLine()) {
-                String line = s.nextLine();
-                String[] specs = line.split("\t");
-                Course course = new Course(specs[1], specs[0], specs[2]);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] parts = line.split("\t");
 
-                System.out.println(course);
-
-
-                if (course.getSession().equals(arg)) {
-                    System.out.println("le cours se donne a " + course.getSession());
-                    // show this course to client
-                    courseList.add(course);
-
+                String session = parts[2];
+                String courseName = parts[1];
+                String courseCode = parts[0];
+                if (session.equals(arg)) {
+                    Course course = new Course(courseName, courseCode, session);
+                    courses.add(course);
                 }
             }
-            System.out.println(courseList);
-            s.close();
+            scanner.close();
+            objectOutputStream.writeObject(courses);
 
-            objectOutputStream.writeObject(courseList);
-
-
-
-        } catch (FileNotFoundException e) {
-            System.err.println("path " + filePath + "not found.");
-        } catch (ObjectStreamException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
+
 
     /**
      Récupérer l'objet 'RegistrationForm' envoyé par le client en utilisant 'objectInputStream', l'enregistrer dans un fichier texte
