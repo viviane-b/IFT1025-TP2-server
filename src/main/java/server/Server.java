@@ -42,10 +42,10 @@ public class Server {
             try {
                 client = server.accept();
                 System.out.println("Connecté au client: " + client);
-                objectInputStream = new ObjectInputStream(client.getInputStream());
-                objectOutputStream = new ObjectOutputStream(client.getOutputStream());
-                listen();
-                disconnect();
+                objectInputStream = new ObjectInputStream(client.getInputStream()); // receive data from client
+                objectOutputStream = new ObjectOutputStream(client.getOutputStream()); // send data to client
+                listen(); // react to client's requests, read or/and write data to stream
+                disconnect(); // close streams and socket
                 System.out.println("Client déconnecté!");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -55,11 +55,13 @@ public class Server {
 
     public void listen() throws IOException, ClassNotFoundException {
         String line;
-        if ((line = this.objectInputStream.readObject().toString()) != null) {
-            Pair<String, String> parts = processCommandLine(line);
-            String cmd = parts.getKey();
-            String arg = parts.getValue();
-            this.alertHandlers(cmd, arg);
+        while (true) {
+            if ((line = this.objectInputStream.readObject().toString()) != null) {
+                Pair<String, String> parts = processCommandLine(line);
+                String cmd = parts.getKey();
+                String arg = parts.getValue();
+                this.alertHandlers(cmd, arg);
+            }
         }
     }
 
