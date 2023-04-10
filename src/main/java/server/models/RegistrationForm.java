@@ -57,6 +57,17 @@ public class RegistrationForm implements Serializable {
         this.course = course;
     }
 
+    // Verifie si les champs sont valides
+    public boolean isValid() {
+        boolean isNameValid = this.prenom != null && this.nom != null;
+//        boolean isEmailValid = this.email.contains
+//                ("/([a-zA-Z0-9\\-\\.]+)(@)(([a-zA-Z0-9\\-]+)(\\.))+([a-zA-Z0-9\\-]+)");
+        boolean isMatriculeValid = this.matricule.length() == 8;
+        boolean isCourseValid = this.course != null;
+        return isNameValid && isMatriculeValid && isCourseValid;
+//                && isEmailValid;
+    }
+
     @Override
     public String toString() {
         return "InscriptionForm{" + "prenom='" + prenom + '\'' + ", nom='" + nom + '\'' + ", email='" + email + '\'' + ", matricule='" + matricule + '\'' + ", course='" + course + '\'' + '}';

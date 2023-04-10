@@ -40,21 +40,21 @@ public class Client {
     }
 
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-        try {
-            Client client = new Client("127.0.0.1", 1337);
-            Scanner scanner = new Scanner(System.in);
-            int i = 0;
-            while (scanner.hasNext()) {
-                String line = scanner.nextLine();
-                client.send(line);
-                System.out.println(client.received().toString());
-            }
-            client.disconnect();
-        } catch (ConnectException x) {
-            System.out.println("Connexion impossible sur port 1337: pas de serveur.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void main(String[] args) throws IOException, ClassNotFoundException {
+//        try {
+//            Client client = new Client("127.0.0.1", 1337);
+//            Scanner scanner = new Scanner(System.in);
+//            int i = 0;
+//            while (scanner.hasNext()) {
+//                String line = scanner.nextLine();
+//                client.send(line);
+//                System.out.println(client.received().toString());
+//            }
+//            client.disconnect();
+//        } catch (ConnectException x) {
+//            System.out.println("Connexion impossible sur port 1337: pas de serveur.");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

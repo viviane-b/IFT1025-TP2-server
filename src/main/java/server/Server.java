@@ -134,11 +134,6 @@ public class Server {
             // Check if form is valid in the client side
             RegistrationForm registrationForm = (RegistrationForm) objectInputStream.readObject();
 
-//            System.out.println(registrationForm.getCourse());
-            objectOutputStream.writeObject(
-                    "Confirmation de l'inscription au cours " + registrationForm.getCourse().getName()
-                    + " pour la session " + registrationForm.getCourse().getSession() + ".");
-
             // Save registration form in a text file
             File inscriptionFile = new File("src/main/java/server/data/inscription.txt");
             FileWriter fw = new FileWriter(inscriptionFile);
@@ -153,6 +148,10 @@ public class Server {
                     registrationForm.getEmail() + "\n";
             writer.append(inscription);
             writer.close();
+            fw.close();
+
+            // Send success message to client (at the end)
+            objectOutputStream.writeObject("SUCCESS");
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
