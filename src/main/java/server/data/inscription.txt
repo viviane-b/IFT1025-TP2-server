@@ -1,1 +1,1 @@
-Automne	IFT1015	21234	a	a	aa
+Hiver	IFT1025	12345678	r	 a	3
