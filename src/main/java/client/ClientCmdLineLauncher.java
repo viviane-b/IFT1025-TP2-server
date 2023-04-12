@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ClientCmdLineLauncher extends Client{
+    //TODO: Write javadoc for ClientCmdLineLauncher class
+    //TODO: Create Jar file for ClientCmdLineLauncher
     public ClientCmdLineLauncher(String host, int port) throws IOException {
         super(host, port);
     }
@@ -94,6 +96,7 @@ public class ClientCmdLineLauncher extends Client{
             form = new RegistrationForm(firstName, lastName, email, matricule, chosenCourse);
 
             // Demander à l'utilisateur de ressaisir les informations si elles sont invalides
+            // TODO: show the invalid fields
             if (!form.isValid())
                 System.out.println("Les informations saisies ne sont pas valides. Veuillez reessayer.");
 
@@ -108,18 +111,19 @@ public class ClientCmdLineLauncher extends Client{
 
         System.out.println("Bienvenue au portail d'inscription à des cours de l'UDEM.");
 
-        // Question 1. Demander à l'utilisateur de choisir une session et recuperer la liste des cours
+        // choisir une session et recuperer la liste des cours
         ArrayList<Course> courses = client.askSessionChoice();
         String nextAction;
         do {
-            // Question 2. Demander à l'utilisateur de choisir prochain action
+            // choisir prochain action
             ClientCmdLineLauncher.showQuestion("Veuillez choisir la prochaine action:",
                     new String[]{"Consulter les cours offerts par une autre session", "Inscription à un cours"});
             nextAction = client.getAnswer().toLowerCase();
             switch (nextAction) {
+                //TODO: Add verification for the nextAction
                 case "1" -> courses = client.askSessionChoice();
                 case "2" -> {
-                    // Question 3. Demander à l'utilisateur de saisir les informations pour s'inscrire
+                    // saisir les informations pour s'inscrire
                     RegistrationForm form = client.askForm(courses);
                     client.send("INSCRIRE");
                     client.send(form);
