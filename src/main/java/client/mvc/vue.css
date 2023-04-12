@@ -1,0 +1,28 @@
+.box{
+    -fx-background-color: #eeeee4;
+    -fx-border-color: #e0e0e0;
+    -fx-padding: 30px;
+    -fx-spacing: 30px;
+    -fx-alignment: top-center ;
+    -fx-min-width: 399px;
+    -fx-max-width: 399px;
+    -fx-height: 600px;
+}
+.h1 {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #424242;
+}
+
+.grid-form {
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+    -fx-alignment: top-center;
+}
+
+.session-submit-box {
+    -fx-alignment: center;
+    -fx-padding: 0;
+    -fx-spacing: 100px;
+}
+
