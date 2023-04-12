@@ -40,7 +40,7 @@ public class Vue extends HBox {
         public CourseView(ArrayList<Course> courses) {
             TableView<Course> table = new TableView<Course>();
             TableColumn<Course, String> courseCodeColumn = new TableColumn<Course, String>("Code");
-            TableColumn<Course, String>courseNameColumn = new TableColumn<Course, String>("Nom");
+            TableColumn<Course, String> courseNameColumn = new TableColumn<Course, String>("Nom");
 
             courseCodeColumn.prefWidthProperty().bind(table.widthProperty().multiply(0.35));
             courseNameColumn.prefWidthProperty().bind(table.widthProperty().multiply(0.65));

@@ -62,7 +62,7 @@ public class ClientCmdLineLauncher extends Client{
             int idx = courses.indexOf(course);
             choicesOfCourse[idx] = String.format("%s\t%s", course.getCode(), course.getName());
         }
-        ClientCmdLineLauncher.showQuestion("Les cours offerts pendant la question sont:", choicesOfCourse);
+        ClientCmdLineLauncher.showQuestion("Les cours offerts pendant la session d'" + courses.get(0).getSession().toLowerCase() +  " sont:", choicesOfCourse);
 
         return courses;
     }
