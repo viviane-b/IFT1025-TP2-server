@@ -18,7 +18,12 @@ public class ClientGUILauncher extends Application {
         launch(args);
     }
 
-    public void start(Stage stage) throws Exception {
+	/**
+	 * Crée une instance de client et affiche la fenêtre d'inscription
+	 * @param stage La fenêtre d'inscription
+	 * @throws Exception
+	 */
+	public void start(Stage stage) throws Exception {
 		Modele leModele = new Modele(HOST, PORT);
 		Vue laVue = new Vue();
 		Controleur leControleur = new Controleur(leModele, laVue);

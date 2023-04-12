@@ -10,14 +10,30 @@ import java.util.Scanner;
 public class ClientCmdLineLauncher extends Client{
     //TODO: Write javadoc for ClientCmdLineLauncher class
     //TODO: Create Jar file for ClientCmdLineLauncher
+
+    /**
+     * Constructeur de ClientCmdLineLauncher
+     * @param host L'adresse IP de connexion
+     * @param port Le port sur lequel le client et le serveur sont connectés
+     * @throws IOException
+     */
     public ClientCmdLineLauncher(String host, int port) throws IOException {
         super(host, port);
     }
 
+    /**
+     * Afficher une question dans le terminal, sans choix de réponses
+     * @param question La question à afficher
+     */
     public static void showQuestion(String question){
         System.out.print(question);
     }
 
+    /**
+     * Afficher une question dans le terminal, avec choix de réponses numérotés
+     * @param question La question à afficher
+     * @param choices La liste de choix à afficher
+     */
     public static void showQuestion(String question, String[] choices){
         System.out.println(question);
         int order = 1;
@@ -28,11 +44,23 @@ public class ClientCmdLineLauncher extends Client{
         System.out.print("> Choix: ");
     }
 
+    /**
+     *
+     * @return la ligne écrite par l'utilisateur
+     */
     public String getAnswer(){
         Scanner sc = new Scanner(System.in);
         return sc.nextLine();
     }
 
+    /**
+     * Imprime un message de confirmation d'inscription au cours si les informations données sont bonnes et un message
+     * d'erreur sinon.
+     * @param prenom
+     * @param courseCode de format 3 lettres et 4 chiffres ABC1234
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void showConfirmation(String prenom, String courseCode) throws IOException, ClassNotFoundException {
         String verdict;
         if (this.received().equals("SUCCESS"))
@@ -44,6 +72,12 @@ public class ClientCmdLineLauncher extends Client{
         System.out.println(msg);
     }
 
+    /**
+     * Affiche le choix des sessions pour lesquelles l'utilisateur peut s'inscire et retourne les cours pour cette session.
+     * @return les cours offerts à la session sélectionnée
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public ArrayList<Course> askSessionChoice() throws IOException, ClassNotFoundException {
         // Question 1. Demander à l'utilisateur de choisir une session
         ClientCmdLineLauncher.showQuestion("Veuillez choisir la session pour laquelle vous voulez consulter la liste de cours:",
@@ -66,6 +100,15 @@ public class ClientCmdLineLauncher extends Client{
 
         return courses;
     }
+
+    /**
+     * Affiche les questions pour que l'utilisateur remplisse le formulaire d'inscription, enregistre les réponses,
+     * vérifie si elles sont valides et retourne le formulaire d'inscprition si valides.
+     * @param courses les cours offerts à la session précisée précédement
+     * @return le formulaire d'inscription
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
 
     public RegistrationForm askForm(ArrayList<Course> courses) throws IOException, ClassNotFoundException {
         RegistrationForm form = null;

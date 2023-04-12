@@ -16,6 +16,10 @@ import java.util.ArrayList;
 public class Vue extends HBox {
     //TODO: Write javadoc for Vue Class
     public static class SessionSubmitButton extends HBox {
+
+        /**
+         * Constructeur pour la classe SessionSubmitButton
+         */
         public SessionSubmitButton() {
             ComboBox comboBox = new ComboBox(FXCollections.observableArrayList("Automne", "Hiver", "Ete"));
             Button submitButton = new Button("Charger");
