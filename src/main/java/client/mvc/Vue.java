@@ -15,6 +15,10 @@ import java.util.ArrayList;
 
 public class Vue extends HBox {
     //TODO: Write javadoc for Vue Class
+
+    /**
+     * Les boutons pour sélectionner une session et charger les cours de cette session
+     */
     public static class SessionSubmitButton extends HBox {
 
         /**
@@ -31,16 +35,29 @@ public class Vue extends HBox {
             this.getChildren().add(submitButton);
         }
 
+        /**
+         * @return la session choisie par l'utilisateur
+         */
         public String getSelectedSession() {
             return ((ComboBox) this.getChildren().get(0)).getValue().toString();
         }
 
+        /**
+         * @return le bouton sur lequel l'utilisateur clique pour charger une session
+         */
         public Button getSubmitButton() {
             return (Button) this.getChildren().get(1);
         }
     }
 
+    /**
+     * La partie gauche de la fenêtre (affichage des cours pour une session choisie)
+     */
     public static class CourseView extends VBox {
+        /**
+         * Ajoute les cours de la session choisie à la partie 'Affichage des cours' de la fenêtre
+         * @param courses la liste des cours d'une session choisie
+         */
         public CourseView(ArrayList<Course> courses) {
             TableView<Course> table = new TableView<Course>();
             TableColumn<Course, String> courseCodeColumn = new TableColumn<Course, String>("Code");
@@ -64,11 +81,18 @@ public class Vue extends HBox {
             this.getChildren().add(table);
         }
 
+        /**
+         * @return le cours sélectionné par l'utilisateur
+         */
         public Course getSelectedCourse() {
             return (Course) ((TableView) this.getChildren().get(0)).getSelectionModel().getSelectedItem();
+
         }
     }
 
+    /**
+     * Formulaire d'inscription avec questions et endroits pour répondre
+     */
     public static class Form extends GridPane {
         public Form() {
             //Style
@@ -85,6 +109,9 @@ public class Vue extends HBox {
             this.add(new TextField(), 1, 3);
         }
 
+        /**
+         * @return les informations entrées par l'utilisateur dans le formulaire d'inscription (en String)
+         */
         public String[] getFormValues() {
             String[] values = new String[4];
             values[0] = ((TextField) this.getChildren().get(4)).getText();
@@ -94,6 +121,9 @@ public class Vue extends HBox {
             return values;
         }
 
+        /**
+         * Efface le texte dans les champs de réponse du formulaire d'inscription
+         */
         public void clearForm() {
             ((TextField) this.getChildren().get(4)).setText("");
             ((TextField) this.getChildren().get(5)).setText("");
@@ -108,6 +138,9 @@ public class Vue extends HBox {
     private Form form;
     private Button sendFormButton;
 
+    /**
+     * Constructeur de la fenêtre d'inscrption
+     */
     public Vue() {
         File f = new File("src/main/java/client/mvc/vue.css");
         try {
@@ -152,32 +185,52 @@ public class Vue extends HBox {
 
     }
 
-    //Getters Setters on left box
+    /**
+     * @return la session sélectionnée par l'utilisateur
+     */
     public String getSelectedSession() {
         return sessionSubmitButton.getSelectedSession();
     }
 
+    /**
+     * @return le cours sélectionné par l'utilisateur
+     */
     public Course getSelectedCourse() {
         return courseView.getSelectedCourse();
     }
 
+    /**
+     * Affiche les cours de la session sélectionnée dans la fenêtre.
+     * @param courses la liste des cours de la session sélectionnée
+     */
     public void setCourseView(ArrayList<Course> courses) {
         ((VBox) this.getChildren().get(0)).getChildren().set(1, new CourseView(courses));
     }
 
+    /**
+     * @return le bouton de sélection de session
+     */
     public Button getSessionSubmitButton() {
         return sessionSubmitButton.getSubmitButton();
     }
 
-    //Getters on right box
+    /**
+     * @return les informations rentrées par l'utilisateur dans le formulaire d'inscription sous forme de tableau de String
+     */
     public String[] getFormValues() {
         return form.getFormValues();
     }
 
+    /**
+     * Réinitialise les champs de réponses du formulaire d'inscription
+     */
     public void clearForm() {
         form.clearForm();
     }
 
+    /**
+     * @return le bouton d'envoi du formulaire d'inscription
+     */
     public Button getSendFormButton() {
         return sendFormButton;
     }

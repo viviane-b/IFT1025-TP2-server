@@ -6,11 +6,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Controleur {
-    //TODO: Write javadoc for Controleur class
+
         private final Modele modele;
         private final Vue vue;
 
-        public Controleur(Modele modele, Vue vue) {
+    /**
+     * Constructeur pour la classe Controleur. Fait le lien entre les classes Vue et Modele.
+     * @param modele
+     * @param vue
+     */
+    public Controleur(Modele modele, Vue vue) {
             this.modele = modele;
             this.vue = vue;
 
