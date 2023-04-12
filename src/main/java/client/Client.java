@@ -3,6 +3,7 @@ package client;
 import java.io.*;
 import java.net.Socket;
 
+
 public class Client {
     //TODO: Write Javadoc for Client class
     private final Socket clientSocket;

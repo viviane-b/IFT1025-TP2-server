@@ -130,6 +130,8 @@ public class ClientCmdLineLauncher extends Client{
 
                     // Afficher le resultat de l'inscription
                     client.showConfirmation(form.getPrenom(), form.getCourse().getCode());
+
+                    client.disconnect();
                 }
             }
 

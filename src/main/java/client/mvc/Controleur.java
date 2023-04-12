@@ -32,7 +32,9 @@ public class Controleur {
             });
 
             this.vue.getSendFormButton().setOnAction((action) -> {
-                if (this.vue.getSelectedCourse() != null) {
+                Course selectedCourse = this.vue.getSelectedCourse();
+                System.out.println(this.vue.getSelectedCourse());
+                if (selectedCourse != null) {
                     try {
                         String[] formValues = this.vue.getFormValues();
                         //TODO: Add a verification for each field
@@ -41,7 +43,7 @@ public class Controleur {
                         String email = formValues[2];
                         String matricule = formValues[3];
 
-                        modele.sendInscrire(firstName, lastName, email, matricule, this.vue.getSelectedCourse());
+                        modele.sendInscrire(firstName, lastName, email, matricule, selectedCourse);
                         this.vue.clearForm();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -52,8 +54,5 @@ public class Controleur {
                     System.out.println("No course selected");
                 }
             });
-
         }
-
-
 }

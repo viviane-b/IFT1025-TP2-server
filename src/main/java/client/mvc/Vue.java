@@ -177,6 +177,4 @@ public class Vue extends HBox {
     public Button getSendFormButton() {
         return sendFormButton;
     }
-
-
 }
