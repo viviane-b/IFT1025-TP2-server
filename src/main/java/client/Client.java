@@ -5,7 +5,6 @@ import java.net.Socket;
 
 
 public class Client {
-    //TODO: Write Javadoc for Client class
     private final Socket clientSocket;
     private final ObjectOutputStream oos;
     private final ObjectInputStream ois;
@@ -23,7 +22,6 @@ public class Client {
     }
 
     public void disconnect() throws IOException {
-        //TODO: Find a place to call this method
         this.oos.close();
         this.ois.close();
         this.clientSocket.close();

@@ -8,7 +8,6 @@ import server.models.Course;
 import server.models.RegistrationForm;
 
 public class Modele {
-    //TODO: Write javadoc for Modele class
     private final Client client;
 
     /**
@@ -64,7 +63,6 @@ public class Modele {
      * @throws ClassNotFoundException
      */
     public boolean receiveResultInscrire() throws IOException, ClassNotFoundException {
-        //TODO: Call this method in pop-up window GUI
         return this.client.received().equals("SUCCESS");
     }
 }

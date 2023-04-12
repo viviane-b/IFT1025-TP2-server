@@ -1,1 +1,2 @@
-Automne	IFT1015	12345678	c	a	b
+Automne	IFT1015	12345678	e	e	e@e
+Automne	IFT1015	12345678	a	a	a@a

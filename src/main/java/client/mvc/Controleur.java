@@ -1,5 +1,6 @@
 package client.mvc;
 
+import client.Verification;
 import server.models.Course;
 
 import java.io.IOException;
@@ -30,34 +31,52 @@ public class Controleur {
                         throw new RuntimeException(e);
                     }
                 }
-                else {
-                    //TODO: Add a popup
-                    System.out.println("No session selected");
-                }
+                else
+                    this.vue.showErrorPopup("No session selected");
             });
 
             this.vue.getSendFormButton().setOnAction((action) -> {
                 Course selectedCourse = this.vue.getSelectedCourse();
-                System.out.println(this.vue.getSelectedCourse());
                 if (selectedCourse != null) {
                     try {
                         String[] formValues = this.vue.getFormValues();
-                        //TODO: Add a verification for each field
+
                         String firstName = formValues[0];
                         String lastName = formValues[1];
                         String email = formValues[2];
                         String matricule = formValues[3];
 
-                        modele.sendInscrire(firstName, lastName, email, matricule, selectedCourse);
-                        this.vue.clearForm();
+                        String errorMsg = "";
+                        if (!Verification.verifyName(firstName))
+                            errorMsg += "First name is not valid\n";
+                        else if (!Verification.verifyName(lastName))
+                            errorMsg += "Last name is not valid\n";
+                        else if (!Verification.verifyEmail(email))
+                            errorMsg += "Email is not valid\n";
+                        else if (!Verification.verifyMatricule(matricule))
+                            errorMsg += "Matricule is not valid\n";
+
+                        if (errorMsg.equals("")) {
+                            this.modele.sendInscrire(firstName, lastName, email, matricule, selectedCourse);
+                            this.vue.clearForm();
+                            String msg = String.format(
+                                "Inscription %s de %s au cours %s",
+                                this.modele.receiveResultInscrire() ? "réussie" : "échouée",
+                                firstName,
+                                this.vue.getSelectedCourse().getCode());
+                            this.vue.showPopup(msg);
+                        } else {
+                            this.vue.showErrorPopup(errorMsg);
+                        }
+
                     } catch (IOException e) {
                         e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e);
                     }
                 }
-                else {
-                    //TODO: Add a popup
-                    System.out.println("No course selected");
-                }
+                else
+                    this.vue.showErrorPopup("No course selected");
             });
         }
 }

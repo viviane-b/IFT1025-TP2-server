@@ -59,13 +59,20 @@ public class RegistrationForm implements Serializable {
 
     // Verifie si les champs sont valides
     public boolean isValid() {
-        boolean isNameValid = this.prenom != null && this.nom != null;
-//        boolean isEmailValid = this.email.contains
-//                ("/([a-zA-Z0-9\\-\\.]+)(@)(([a-zA-Z0-9\\-]+)(\\.))+([a-zA-Z0-9\\-]+)");
-        boolean isMatriculeValid = this.matricule.length() == 8;
-        boolean isCourseValid = this.course != null;
-        return isNameValid && isMatriculeValid && isCourseValid;
-//                && isEmailValid;
+        return isEmailValid() && isMatriculeValid() && isNameValid() && isCourseValid();
+    }
+
+    public boolean isEmailValid() {
+        return this.email.contains("/([a-zA-Z0-9\\-\\.]+)(@)(([a-zA-Z0-9\\-]+)(\\.))+([a-zA-Z0-9\\-]+)/");
+    }
+    public boolean isMatriculeValid() {
+        return this.matricule.length() == 8;
+    }
+    public boolean isNameValid() {
+        return this.prenom != null && this.nom != null;
+    }
+    public boolean isCourseValid() {
+        return this.course != null;
     }
 
     @Override

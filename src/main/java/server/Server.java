@@ -131,12 +131,12 @@ public class Server {
     public void handleRegistration() {
 
         try {
-            // Check if form is valid in the client side
+            // TODO: bug: inscription.txt get overwritten every time
             RegistrationForm registrationForm = (RegistrationForm) objectInputStream.readObject();
 
             // Save registration form in a text file
             File inscriptionFile = new File("src/main/java/server/data/inscription.txt");
-            FileWriter fw = new FileWriter(inscriptionFile);
+            FileWriter fw = new FileWriter(inscriptionFile, true);
             BufferedWriter writer = new BufferedWriter(fw);
 
             String inscription =
@@ -146,7 +146,7 @@ public class Server {
                     registrationForm.getNom() + "\t" +
                     registrationForm.getPrenom() + "\t" +
                     registrationForm.getEmail() + "\n";
-            writer.append(inscription);
+            writer.write(inscription);
             writer.close();
             fw.close();
 

@@ -54,12 +54,14 @@ public class Vue extends HBox {
      * La partie gauche de la fenêtre (affichage des cours pour une session choisie)
      */
     public static class CourseView extends VBox {
+        private final TableView<Course> table;
+
         /**
          * Ajoute les cours de la session choisie à la partie 'Affichage des cours' de la fenêtre
          * @param courses la liste des cours d'une session choisie
          */
         public CourseView(ArrayList<Course> courses) {
-            TableView<Course> table = new TableView<Course>();
+            table = new TableView<Course>();
             TableColumn<Course, String> courseCodeColumn = new TableColumn<Course, String>("Code");
             TableColumn<Course, String> courseNameColumn = new TableColumn<Course, String>("Nom");
 
@@ -85,8 +87,7 @@ public class Vue extends HBox {
          * @return le cours sélectionné par l'utilisateur
          */
         public Course getSelectedCourse() {
-            return (Course) ((TableView) this.getChildren().get(0)).getSelectionModel().getSelectedItem();
-
+            return (Course) table.getSelectionModel().getSelectedItem();
         }
     }
 
@@ -132,11 +133,19 @@ public class Vue extends HBox {
         }
     }
 
-    private ArrayList<Course> courses;
+    public static class PopupError extends Alert {
+        public PopupError(String message) {
+            super(AlertType.ERROR);
+            this.setTitle("Erreur");
+            this.setHeaderText("Une erreur est survenue");
+            this.setContentText(message);
+        }
+    }
+
     private CourseView courseView;
-    private SessionSubmitButton sessionSubmitButton;
-    private Form form;
-    private Button sendFormButton;
+    private final SessionSubmitButton sessionSubmitButton;
+    private final Form form;
+    private final Button sendFormButton;
 
     /**
      * Constructeur de la fenêtre d'inscrption
@@ -159,8 +168,7 @@ public class Vue extends HBox {
 
         // Left box
         Text titleLeft = new Text("Liste des cours");
-        courses = new ArrayList<Course>();
-        courseView = new CourseView(courses);
+        courseView = new CourseView(new ArrayList<Course>());
         sessionSubmitButton = new SessionSubmitButton();
 
         leftBox.getChildren().add(titleLeft);
@@ -204,7 +212,8 @@ public class Vue extends HBox {
      * @param courses la liste des cours de la session sélectionnée
      */
     public void setCourseView(ArrayList<Course> courses) {
-        ((VBox) this.getChildren().get(0)).getChildren().set(1, new CourseView(courses));
+        courseView = new CourseView(courses);
+        ((VBox) this.getChildren().get(0)).getChildren().set(1, courseView);
     }
 
     /**
@@ -233,5 +242,21 @@ public class Vue extends HBox {
      */
     public Button getSendFormButton() {
         return sendFormButton;
+    }
+
+    public void showPopup(String message) {
+        Alert popupError = new Alert(Alert.AlertType.INFORMATION);
+        popupError.setTitle("Information");
+        popupError.setHeaderText("Information");
+        popupError.setContentText(message);
+        popupError.show();
+    }
+
+    public void showErrorPopup(String message) {
+        Alert popupError = new Alert(Alert.AlertType.ERROR);
+        popupError.setTitle("Erreur");
+        popupError.setHeaderText("Une erreur est survenue");
+        popupError.setContentText(message);
+        popupError.show();
     }
 }
