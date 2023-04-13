@@ -21,6 +21,10 @@ public class Client {
         this.ois = new ObjectInputStream(this.clientSocket.getInputStream());
     }
 
+    /**
+     * Ferme le objectOutputStream, objectInputStream, et le Socket
+     * @throws IOException
+     */
     public void disconnect() throws IOException {
         this.oos.close();
         this.ois.close();

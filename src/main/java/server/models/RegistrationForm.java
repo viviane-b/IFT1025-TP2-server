@@ -9,6 +9,14 @@ public class RegistrationForm implements Serializable {
     private String matricule;
     private Course course;
 
+    /**
+     * Constructeur de RegistrationForm
+     * @param prenom
+     * @param nom
+     * @param email
+     * @param matricule
+     * @param course
+     */
     public RegistrationForm(String prenom, String nom, String email, String matricule, Course course) {
         this.prenom = prenom;
         this.nom = nom;
@@ -58,9 +66,15 @@ public class RegistrationForm implements Serializable {
     }
 
     // Verifie si les champs sont valides
+
+    /**
+     * Verifie si les champs sont valides
+     * @return true si les champs Email, Matricule, Nom et Cours sont valides
+     */
     public boolean isValid() {
         return isEmailValid() && isMatriculeValid() && isNameValid() && isCourseValid();
     }
+
 
     public boolean isEmailValid() {
         return this.email.contains("/([a-zA-Z0-9\\-\\.]+)(@)(([a-zA-Z0-9\\-]+)(\\.))+([a-zA-Z0-9\\-]+)/");

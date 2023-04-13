@@ -14,7 +14,6 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 public class Vue extends HBox {
-    //TODO: Write javadoc for Vue Class
 
     /**
      * Les boutons pour sélectionner une session et charger les cours de cette session
@@ -244,6 +243,10 @@ public class Vue extends HBox {
         return sendFormButton;
     }
 
+    /**
+     * Affiche une fenêtre popup avec un message
+     * @param message Le message a afficher dans la fenêtre de popup
+     */
     public void showPopup(String message) {
         Alert popupError = new Alert(Alert.AlertType.INFORMATION);
         popupError.setTitle("Information");
@@ -252,6 +255,10 @@ public class Vue extends HBox {
         popupError.show();
     }
 
+    /**
+     * Affiche une fenêtre popup de type erreur avec un message
+     * @param message Le message à afficher dans la fenêtre popup
+     */
     public void showErrorPopup(String message) {
         Alert popupError = new Alert(Alert.AlertType.ERROR);
         popupError.setTitle("Erreur");
