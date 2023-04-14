@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ClientCmdLineLauncher extends Client{
-    //TODO: Write javadoc for ClientCmdLineLauncher class
-    //TODO: Create Jar file for ClientCmdLineLauncher
-
     /**
      * Constructeur de ClientCmdLineLauncher
      * @param host L'adresse IP de connexion
@@ -48,9 +45,17 @@ public class ClientCmdLineLauncher extends Client{
      *
      * @return la ligne écrite par l'utilisateur
      */
-    public String getAnswer(){
+    public static String getAnswer(){
         Scanner sc = new Scanner(System.in);
         return sc.nextLine();
+    }
+
+    public static String getVerifiedAnswer(String[] choices){
+        String answer = getAnswer();
+        for (String choice : choices)
+            if (choice.equals(answer))
+                return answer;
+        return null;
     }
 
     /**
@@ -82,7 +87,7 @@ public class ClientCmdLineLauncher extends Client{
         // Question 1. Demander à l'utilisateur de choisir une session
         ClientCmdLineLauncher.showQuestion("Veuillez choisir la session pour laquelle vous voulez consulter la liste de cours:",
                 new String[]{"Automne", "Hiver", "Été"});
-        String session = this.getAnswer().toLowerCase();
+        String session = ClientCmdLineLauncher.getAnswer().toLowerCase();
         switch (session){
             case "1", "automne" -> this.send("CHARGER Automne");
             case "2", "hiver" -> this.send("CHARGER Hiver");
@@ -96,7 +101,9 @@ public class ClientCmdLineLauncher extends Client{
             int idx = courses.indexOf(course);
             choicesOfCourse[idx] = String.format("%s\t%s", course.getCode(), course.getName());
         }
-        ClientCmdLineLauncher.showQuestion("Les cours offerts pendant la session d'" + courses.get(0).getSession().toLowerCase() +  " sont:", choicesOfCourse);
+        ClientCmdLineLauncher.showQuestion("Les cours offerts pendant la session d'" +
+                courses.get(0).getSession().toLowerCase() +  " sont:",
+                choicesOfCourse);
 
         return courses;
     }
@@ -112,72 +119,110 @@ public class ClientCmdLineLauncher extends Client{
 
     public RegistrationForm askForm(ArrayList<Course> courses) throws IOException, ClassNotFoundException {
         RegistrationForm form = null;
+        String errorMsg, lastName, firstName, email, matricule, courseCode;
+        Course chosenCourse;
         do {
             //Demander à l'utilisateur de saisir les informations pour s'inscrire
             ClientCmdLineLauncher.showQuestion("Veuillez saisir votre prenom:");
-            String firstName = this.getAnswer();
+            firstName = ClientCmdLineLauncher.getAnswer();
             ClientCmdLineLauncher.showQuestion("Veuillez saisir votre nom:");
-            String lastName = this.getAnswer();
+            lastName = ClientCmdLineLauncher.getAnswer();
             ClientCmdLineLauncher.showQuestion("Veuillez saisir votre email:");
-            String email = this.getAnswer();
+            email = ClientCmdLineLauncher.getAnswer();
             ClientCmdLineLauncher.showQuestion("Veuillez saisir votre matricule:");
-            String matricule = this.getAnswer();
+            matricule = ClientCmdLineLauncher.getAnswer();
             ClientCmdLineLauncher.showQuestion("Veuillez saisir le code du cours:");
-            String courseCode = this.getAnswer();
+            courseCode = ClientCmdLineLauncher.getAnswer();
 
-            // Trouver le cours choisi et verifier si le code du cours est valide
-            Course chosenCourse = null;
-            found:{
+            // Verifier si les informations sont valides
+            errorMsg = "";
+            if (!Verification.verifyName(firstName))
+                errorMsg += "First name is not valid\n";
+            if (!Verification.verifyName(lastName))
+                errorMsg += "Last name is not valid\n";
+            if (!Verification.verifyEmail(email))
+                errorMsg += "Email is not valid\n";
+            if (!Verification.verifyMatricule(matricule))
+                errorMsg += "Matricule is not valid\n";
+
+            // verifier si le code du cours est valid
+            chosenCourse = null;
+            found:
+            {
                 for (Course course : courses)
                     if (course.getCode().equals(courseCode)) {
                         chosenCourse = course;
                         break found;
                     }
-                System.out.println("Le code du cours est invalide. Veuillez reessayer.");
+                errorMsg += "Le code du cours est invalide. Veuillez reessayer.\n";
             }
 
-            form = new RegistrationForm(firstName, lastName, email, matricule, chosenCourse);
+            // Afficher les erreurs s'il y en a
+            System.out.print(errorMsg);
 
             // Demander à l'utilisateur de ressaisir les informations si elles sont invalides
-            // TODO: show the invalid fields
-            if (!form.isValid())
-                System.out.println("Les informations saisies ne sont pas valides. Veuillez reessayer.");
-
-        } while (!form.isValid());
+        } while (errorMsg.length() > 0);
 
         // Retourner le formulaire d'inscription
-        return form;
+        return new RegistrationForm(firstName, lastName, email, matricule, chosenCourse);
+    }
+
+    /**
+     * Affiche le menu principal et permet à l'utilisateur d'inscrire.
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+
+    public void inscrire() throws IOException, ClassNotFoundException {
+        // Demander à l'utilisateur de choisir une session et recuperer la liste des cours
+        ArrayList<Course> courses = this.askSessionChoice();
+        String nextAction;
+
+        do {
+            ClientCmdLineLauncher.showQuestion("Veuillez choisir la prochaine action:",
+                new String[]{"Consulter les cours offerts par une autre session", "Inscription à un cours"});
+
+            nextAction = ClientCmdLineLauncher.getAnswer().toLowerCase();
+
+            switch (nextAction) {
+                case "1" -> courses = this.askSessionChoice();
+                case "2" -> {
+                    // saisir les informations pour s'inscrire
+                    RegistrationForm form = this.askForm(courses);
+                    this.send("INSCRIRE");
+                    this.send(form);
+
+                    // Afficher le resultat de l'inscription
+                    this.showConfirmation(form.getPrenom(), form.getCourse().getCode());
+                }
+                default -> {
+                    System.out.println("Veuillez choisir une action valide.");
+                }
+            }
+        } while (!nextAction.equals("2"));
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         ClientCmdLineLauncher client = new ClientCmdLineLauncher("127.0.0.1", 1337);
-
         System.out.println("Bienvenue au portail d'inscription à des cours de l'UDEM.");
-
-        // choisir une session et recuperer la liste des cours
-        ArrayList<Course> courses = client.askSessionChoice();
         String nextAction;
         do {
-            // choisir prochain action
-            ClientCmdLineLauncher.showQuestion("Veuillez choisir la prochaine action:",
-                    new String[]{"Consulter les cours offerts par une autre session", "Inscription à un cours"});
-            nextAction = client.getAnswer().toLowerCase();
-            switch (nextAction) {
-                //TODO: Add verification for the nextAction
-                case "1" -> courses = client.askSessionChoice();
-                case "2" -> {
-                    // saisir les informations pour s'inscrire
-                    RegistrationForm form = client.askForm(courses);
-                    client.send("INSCRIRE");
-                    client.send(form);
+            // Demander à l'utilisateur de s'inscrire
+            client.inscrire();
 
-                    // Afficher le resultat de l'inscription
-                    client.showConfirmation(form.getPrenom(), form.getCourse().getCode());
-
-                    client.disconnect();
+            ClientCmdLineLauncher.showQuestion("Voulez-vous faire une autre inscription?", new String[]{"Oui", "Non"});
+            // Verifier si l'utilisateur a choisi une action valide
+            boolean validAnswer = true;
+            do {
+                nextAction = ClientCmdLineLauncher.getAnswer().toLowerCase();
+                if (!nextAction.equals("1") && !nextAction.equals("2")){
+                    validAnswer = false;
+                    System.out.println("Veuillez choisir une action valide.");
                 }
-            }
+            } while (!validAnswer);
 
-        } while (!nextAction.equals("2"));
+            // Continuer si l'utilisateur a choisi "Oui"
+        } while (nextAction.equals("1"));
+        System.out.println("Merci d'utiliser le système d'inscription de l'UdeM. Au revoir!");
     }
 }
