@@ -60,12 +60,7 @@ public class ClientCmdLineLauncher extends Client{
      * @throws ClassNotFoundException
      */
     public void showConfirmation(String prenom, String courseCode) throws IOException, ClassNotFoundException {
-        String verdict;
-        if (this.received().equals("SUCCESS"))
-            verdict = "réussie";
-        else
-            verdict = "échouée";
-
+        String verdict = this.received().equals("SUCCESS") ? "réussie" : "échouée";
         String msg = String.format("Inscription %s de %s au cours %s", verdict, prenom, courseCode);
         System.out.println(msg);
     }
