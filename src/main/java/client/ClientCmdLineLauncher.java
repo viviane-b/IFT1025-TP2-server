@@ -50,13 +50,6 @@ public class ClientCmdLineLauncher extends Client{
         return sc.nextLine();
     }
 
-    public static String getVerifiedAnswer(String[] choices){
-        String answer = getAnswer();
-        for (String choice : choices)
-            if (choice.equals(answer))
-                return answer;
-        return null;
-    }
 
     /**
      * Imprime un message de confirmation d'inscription au cours si les informations données sont bonnes et un message
@@ -113,17 +106,14 @@ public class ClientCmdLineLauncher extends Client{
      * vérifie si elles sont valides et retourne le formulaire d'inscprition si valides.
      * @param courses les cours offerts à la session précisée précédement
      * @return le formulaire d'inscription
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
 
-    public RegistrationForm askForm(ArrayList<Course> courses) throws IOException, ClassNotFoundException {
-        RegistrationForm form = null;
+    public RegistrationForm askForm(ArrayList<Course> courses){
         String errorMsg, lastName, firstName, email, matricule, courseCode;
         Course chosenCourse;
         do {
             //Demander à l'utilisateur de saisir les informations pour s'inscrire
-            ClientCmdLineLauncher.showQuestion("Veuillez saisir votre prenom:");
+            ClientCmdLineLauncher.showQuestion("Veuillez saisir votre prénom:");
             firstName = ClientCmdLineLauncher.getAnswer();
             ClientCmdLineLauncher.showQuestion("Veuillez saisir votre nom:");
             lastName = ClientCmdLineLauncher.getAnswer();
@@ -195,9 +185,7 @@ public class ClientCmdLineLauncher extends Client{
                     // Afficher le resultat de l'inscription
                     this.showConfirmation(form.getPrenom(), form.getCourse().getCode());
                 }
-                default -> {
-                    System.out.println("Veuillez choisir une action valide.");
-                }
+                default -> System.out.println("Veuillez choisir une action valide.");
             }
         } while (!nextAction.equals("2"));
     }

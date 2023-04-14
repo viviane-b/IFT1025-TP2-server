@@ -1,0 +1,4 @@
+- demo_client_simple: https://udemontreal-my.sharepoint.com/:v:/g/personal/hoang_quan_tran_1_umontreal_ca/ETALLOvNOspNl5RfuMKbifcBKbNXFjwlPl458aC1dVDw2Q?e=9jAaiQ
+- demo_client_fx: https://udemontreal-my.sharepoint.com/:v:/g/personal/hoang_quan_tran_1_umontreal_ca/ETALLOvNOspNl5RfuMKbifcBKbNXFjwlPl458aC1dVDw2Q?e=9jAaiQ
+
+- À ajouter à "VM options" quant à l'exécution de client_fx: --module-path "<Chemin absolue mene à la library JavaFX>" --add-modules javafx.fxml,javafx.controls,javafx.graphics
