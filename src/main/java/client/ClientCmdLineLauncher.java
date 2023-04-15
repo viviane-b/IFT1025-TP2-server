@@ -12,7 +12,7 @@ public class ClientCmdLineLauncher extends Client{
      * Constructeur de ClientCmdLineLauncher
      * @param host L'adresse IP de connexion
      * @param port Le port sur lequel le client et le serveur sont connectés
-     * @throws IOException
+     * @throws IOException si la connexion avec le serveur est perdue
      */
     public ClientCmdLineLauncher(String host, int port) throws IOException {
         super(host, port);
