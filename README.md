@@ -21,5 +21,5 @@ server.jar: ```/out/artifacts/Server_jar/Server.jar```
 - demo_client_fx: ```https://udemontreal-my.sharepoint.com/:v:/g/personal/hoang_quan_tran_1_umontreal_ca/ETALLOvNOspNl5RfuMKbifcBKbNXFjwlPl458aC1dVDw2Q?e=9jAaiQ```
 
 ### Our team members: 
-- Viviane Binet: 
+- Viviane Binet: 20244728
 - Hoang Quan Tran: 20249088
