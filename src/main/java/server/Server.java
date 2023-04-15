@@ -12,8 +12,13 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Server {
-
+    /**
+     * Commande pour l'inscription à des cours
+     */
     public final static String REGISTER_COMMAND = "INSCRIRE";
+    /**
+     * Commande pour le chargement des cours d'une session en particulier
+     */
     public final static String LOAD_COMMAND = "CHARGER";
     private final ServerSocket server;
     private Socket client;
@@ -21,12 +26,21 @@ public class Server {
     private ObjectOutputStream objectOutputStream;
     private final ArrayList<EventHandler> handlers;
 
+    /**
+     * Constructeur de la classe Server
+     * @param port le port sur lequel le client doit se connecter pour accéder avec ce serveur
+     * @throws IOException si la connexion entre le serveur et le client est inexistante ou interrompue
+     */
     public Server(int port) throws IOException {
         this.server = new ServerSocket(port, 1);
         this.handlers = new ArrayList<EventHandler>();
         this.addEventHandler(this::handleEvents);
     }
 
+    /**
+     * Ajouter un événement à la liste d'événements possibles
+     * @param h l'événement à ajouter
+     */
     public void addEventHandler(EventHandler h) {
         this.handlers.add(h);
     }
@@ -37,6 +51,9 @@ public class Server {
         }
     }
 
+    /**
+     * Démarre l'exécution du serveur. Le serveur attend qu'un client se connecte pour répondre aux commandes.
+     */
     public void run() {
         while (true) {
             try {
@@ -53,6 +70,11 @@ public class Server {
         }
     }
 
+    /**
+     * Prend les commandes reçues du client et les traite.
+     * @throws IOException si la connexion entre le serveur et le client est inexistante ou interrompue
+     * @throws ClassNotFoundException
+     */
     public void listen() throws IOException, ClassNotFoundException {
         String line;
         while (true) {
@@ -65,6 +87,11 @@ public class Server {
         }
     }
 
+    /**
+     * Transforme la ligne de commande en une paire de commande et arguments.
+     * @param line la ligne de commande du client (de forme "CHARGER ..." ou INSCRIRE ..."
+     * @return la commande et l'argument séparés
+     */
     public Pair<String, String> processCommandLine(String line) {
         String[] parts = line.split(" ");
         String cmd = parts[0];
@@ -72,12 +99,21 @@ public class Server {
         return new Pair<>(cmd, args);
     }
 
+    /**
+     * Mettre fin à la connexion entre le serveur et le client
+     * @throws IOException si la connexion entre le serveur et le client est inexistante ou interrompue avant
+     */
     public void disconnect() throws IOException {
         objectOutputStream.close();
         objectInputStream.close();
         client.close();
     }
 
+    /**
+     * Traiter les commandes selon leur type de commande
+     * @param cmd la commande, "CHARGER" ou "INSCRIRE"
+     * @param arg les arguments de la commande
+     */
     public void handleEvents(String cmd, String arg) {
         if (cmd.equals(REGISTER_COMMAND)) {
             handleRegistration();

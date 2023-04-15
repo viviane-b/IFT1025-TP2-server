@@ -17,7 +17,7 @@ import javafx.stage.Stage;
  */
 
 public class ClientGUILauncher extends Application {
-	//TODO: bonus question about multithreading
+
 	private final static String HOST = "127.0.0.1";
 	private final static int PORT = 1337;
     public static void main (String[] args) {

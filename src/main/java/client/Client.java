@@ -13,7 +13,7 @@ public class Client {
      * Établit une connexion à un serveur
      * @param host L'adresse IP de connexion
      * @param port Le port sur lequel le client et le serveur sont connectés
-     * @throws IOException
+     * @throws IOException si la connexion avec le serveur est interrompue ou inexistante
      */
     public Client(String host, int port) throws IOException {
         this.clientSocket = new Socket(host, port);
@@ -23,7 +23,7 @@ public class Client {
 
     /**
      * Ferme le objectOutputStream, objectInputStream, et le Socket
-     * @throws IOException
+     * @throws IOException si la connexion avec le serveur est interrompue ou inexistante
      */
     public void disconnect() throws IOException {
         this.oos.close();
@@ -34,7 +34,7 @@ public class Client {
     /**
      *
      * @return l'objet reçu du serveur (sous forme d'Object)
-     * @throws IOException
+     * @throws IOException si la connexion avec le serveur est interrompue ou inexistante
      * @throws ClassNotFoundException
      */
     public Object received() throws IOException, ClassNotFoundException {
@@ -44,7 +44,7 @@ public class Client {
     /**
      * Envoyer une commande sous forme de String au serveur.
      * @param line La commande envoyée par le client
-     * @throws IOException
+     * @throws IOException si la connexion avec le serveur est interrompue ou inexistante
      */
     public void send(String line) throws IOException {
         this.oos.writeObject(line);
@@ -54,7 +54,7 @@ public class Client {
     /**
      * Envoyer un Object au serveur.
      * @param obj l'objet à envoyer
-     * @throws IOException
+     * @throws IOException si la connexion avec le serveur est interrompue ou inexistante
      */
     public void send(Object obj) throws IOException {
         this.oos.writeObject(obj);
