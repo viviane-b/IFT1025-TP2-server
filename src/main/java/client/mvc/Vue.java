@@ -88,6 +88,10 @@ public class Vue extends HBox {
         public Course getSelectedCourse() {
             return (Course) table.getSelectionModel().getSelectedItem();
         }
+
+        public void setCourseView(ArrayList<Course> courses) {
+            this.getChildren().set(1, new CourseView(courses));
+        }
     }
 
     /**
@@ -120,24 +124,18 @@ public class Vue extends HBox {
             values[3] = ((TextField) this.getChildren().get(7)).getText();
             return values;
         }
+        public void setForm(String firstName, String lastName, String email, String matricule) {
+            ((TextField) this.getChildren().get(4)).setText(firstName);
+            ((TextField) this.getChildren().get(5)).setText(lastName);
+            ((TextField) this.getChildren().get(6)).setText(email);
+            ((TextField) this.getChildren().get(7)).setText(matricule);
+        }
 
         /**
          * Efface le texte dans les champs de réponse du formulaire d'inscription
          */
         public void clearForm() {
-            ((TextField) this.getChildren().get(4)).setText("");
-            ((TextField) this.getChildren().get(5)).setText("");
-            ((TextField) this.getChildren().get(6)).setText("");
-            ((TextField) this.getChildren().get(7)).setText("");
-        }
-    }
-
-    public static class PopupError extends Alert {
-        public PopupError(String message) {
-            super(AlertType.ERROR);
-            this.setTitle("Erreur");
-            this.setHeaderText("Une erreur est survenue");
-            this.setContentText(message);
+            this.setForm("", "", "", "");
         }
     }
 
@@ -189,7 +187,6 @@ public class Vue extends HBox {
         rightBox.getStyleClass().add("box");
         titleLeft.getStyleClass().add("h1");
         titleRight.getStyleClass().add("h1");
-
     }
 
     /**
@@ -211,8 +208,7 @@ public class Vue extends HBox {
      * @param courses la liste des cours de la session sélectionnée
      */
     public void setCourseView(ArrayList<Course> courses) {
-        courseView = new CourseView(courses);
-        ((VBox) this.getChildren().get(0)).getChildren().set(1, courseView);
+        courseView.setCourseView(courses);
     }
 
     /**

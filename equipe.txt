@@ -1,2 +1,3 @@
 Hoang Quan  Tran    20249088
-Viviane  Binet
+Viviane  Binet  20244728
+Les charges de travail sont bien réparties entre les membres de l'équipe. Les commits viennent d'un seul compte Github, mais les membres de l'équipe ont travaillé ensemble sur le projet.
