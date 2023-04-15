@@ -104,9 +104,9 @@ public class ClientCmdLineLauncher extends Client{
                 "La session choisie est invalide. Veuillez réessayer.");
 
         switch (session) {
-            case "1", "automne" -> this.send("CHARGER Automne");
-            case "2", "hiver" -> this.send("CHARGER Hiver");
-            case "3", "été", "ete" -> this.send("CHARGER Ete");
+            case "1" -> this.send("CHARGER Automne");
+            case "2" -> this.send("CHARGER Hiver");
+            case "3" -> this.send("CHARGER Ete");
         }
 
         // Afficher la liste des cours
@@ -116,7 +116,7 @@ public class ClientCmdLineLauncher extends Client{
             int idx = courses.indexOf(course);
             choicesOfCourse[idx] = String.format("%s\t%s", course.getCode(), course.getName());
         }
-        ClientCmdLineLauncher.showQuestion("Les cours offerts pendant la session d'" +
+        showQuestion("Les cours offerts pendant la session d'" +
                 courses.get(0).getSession().toLowerCase() +  " sont:",
                 choicesOfCourse);
 
@@ -135,16 +135,16 @@ public class ClientCmdLineLauncher extends Client{
         Course chosenCourse;
         do {
             //Demander à l'utilisateur de saisir les informations pour s'inscrire
-            ClientCmdLineLauncher.showQuestion("Veuillez saisir votre prénom:");
-            firstName = ClientCmdLineLauncher.getAnswer();
-            ClientCmdLineLauncher.showQuestion("Veuillez saisir votre nom:");
-            lastName = ClientCmdLineLauncher.getAnswer();
-            ClientCmdLineLauncher.showQuestion("Veuillez saisir votre email:");
-            email = ClientCmdLineLauncher.getAnswer();
-            ClientCmdLineLauncher.showQuestion("Veuillez saisir votre matricule:");
-            matricule = ClientCmdLineLauncher.getAnswer();
-            ClientCmdLineLauncher.showQuestion("Veuillez saisir le code du cours:");
-            courseCode = ClientCmdLineLauncher.getAnswer();
+            showQuestion("Veuillez saisir votre prénom:");
+            firstName = getAnswer();
+            showQuestion("Veuillez saisir votre nom:");
+            lastName = getAnswer();
+            showQuestion("Veuillez saisir votre email:");
+            email = getAnswer();
+            showQuestion("Veuillez saisir votre matricule:");
+            matricule = getAnswer();
+            showQuestion("Veuillez saisir le code du cours:");
+            courseCode = getAnswer();
 
             // Verifier si les informations sont valides
             errorMsg = "";
