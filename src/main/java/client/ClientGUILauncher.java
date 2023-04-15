@@ -8,9 +8,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * IMPORTANT:
+ * IMPORTANT :
  * À ajouter à "VM options" quant à l'exécution de client_fx:
- * --module-path "<Chemin absolue mene à la library JavaFX>" --add-modules javafx.fxml,javafx.controls,javafx.graphics
+ * --module-path "<Chemin absolue mène à la library JavaFX>" --add-modules javafx.fxml,javafx.controls,javafx.graphics
  * Et importer la library JavaFX dans le projet en faisant:
  * File -> Project Structure -> Libraries -> + -> <Dossier lib de la library JavaFX>
  * Il est important de faire ces 2 étapes sinon le programme ne fonctionnera pas.
@@ -18,8 +18,6 @@ import javafx.stage.Stage;
 
 public class ClientGUILauncher extends Application {
 	//TODO: bonus question about multithreading
-	//TODO: Write javadoc for ClientGUILauncher
-	//TODO: Create Jar file for ClientGUILauncher
 	private final static String HOST = "127.0.0.1";
 	private final static int PORT = 1337;
     public static void main (String[] args) {

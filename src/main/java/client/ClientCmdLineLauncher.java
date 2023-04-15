@@ -12,7 +12,7 @@ public class ClientCmdLineLauncher extends Client{
      * Constructeur de ClientCmdLineLauncher
      * @param host L'adresse IP de connexion
      * @param port Le port sur lequel le client et le serveur sont connectés
-     * @throws IOException
+     * @throws IOException si la connexion avec le serveur est perdue
      */
     public ClientCmdLineLauncher(String host, int port) throws IOException {
         super(host, port);
@@ -50,14 +50,13 @@ public class ClientCmdLineLauncher extends Client{
         return sc.nextLine();
     }
 
-
     /**
      * Imprime un message de confirmation d'inscription au cours si les informations données sont bonnes et un message
      * d'erreur sinon.
-     * @param prenom
+     * @param prenom le prénom de l'utilisateur
      * @param courseCode de format 3 lettres et 4 chiffres ABC1234
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws IOException si la connexion avec le serveur est perdue
+     * @throws ClassNotFoundException si le serveur envoie un objet de type inconnu
      */
     public void showConfirmation(String prenom, String courseCode) throws IOException, ClassNotFoundException {
         String verdict = this.received().equals("SUCCESS") ? "réussie" : "échouée";
@@ -66,20 +65,48 @@ public class ClientCmdLineLauncher extends Client{
     }
 
     /**
-     * Affiche le choix des sessions pour lesquelles l'utilisateur peut s'inscire et retourne les cours pour cette session.
+     * Affiche une question et attend une réponse de l'utilisateur. Si la réponse n'est pas valide, affiche un message
+     * d'erreur et redemande la réponse.
+     * @param question La question à afficher
+     * @param answers Les réponses possibles
+     * @param validChoices Les choix valides, qui peuvent être des numéros ou des mots
+     * @param errorMsg Le message d'erreur à afficher
+     * @return La réponse de l'utilisateur
+     */
+    public static String loopForValidInput(String question, String[] answers, String[] validChoices, String errorMsg) {
+        String choice;
+        boolean validInput = false;
+
+        do {
+            showQuestion(question, answers);
+            choice = getAnswer().toLowerCase();
+            for (String validChoice : validChoices)
+                if (choice.equals(validChoice)) {
+                    validInput = true;
+                    break;
+                }
+            if (!validInput)
+                System.out.print(errorMsg);
+        } while (!validInput);
+        return choice;
+    }
+
+    /**
+     * Affiche le choix des sessions pour lesquelles l'utilisateur peut s'inscrire et retourne les cours pour cette session.
      * @return les cours offerts à la session sélectionnée
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws IOException si la connexion avec le serveur est perdue
+     * @throws ClassNotFoundException si le serveur envoie un objet de type inconnu
      */
     public ArrayList<Course> askSessionChoice() throws IOException, ClassNotFoundException {
-        // Question 1. Demander à l'utilisateur de choisir une session
-        ClientCmdLineLauncher.showQuestion("Veuillez choisir la session pour laquelle vous voulez consulter la liste de cours:",
-                new String[]{"Automne", "Hiver", "Été"});
-        String session = ClientCmdLineLauncher.getAnswer().toLowerCase();
-        switch (session){
-            case "1", "automne" -> this.send("CHARGER Automne");
-            case "2", "hiver" -> this.send("CHARGER Hiver");
-            case "3", "été", "ete" -> this.send("CHARGER Ete");
+        String session = loopForValidInput("Veuillez choisir la session pour laquelle vous voulez consulter la liste de cours:",
+                new String[]{"Automne", "Hiver", "Été"},
+                new String[]{"1", "2", "3"},
+                "La session choisie est invalide. Veuillez réessayer.");
+
+        switch (session) {
+            case "1" -> this.send("CHARGER Automne");
+            case "2" -> this.send("CHARGER Hiver");
+            case "3" -> this.send("CHARGER Ete");
         }
 
         // Afficher la liste des cours
@@ -89,7 +116,7 @@ public class ClientCmdLineLauncher extends Client{
             int idx = courses.indexOf(course);
             choicesOfCourse[idx] = String.format("%s\t%s", course.getCode(), course.getName());
         }
-        ClientCmdLineLauncher.showQuestion("Les cours offerts pendant la session d'" +
+        showQuestion("Les cours offerts pendant la session d'" +
                 courses.get(0).getSession().toLowerCase() +  " sont:",
                 choicesOfCourse);
 
@@ -98,8 +125,8 @@ public class ClientCmdLineLauncher extends Client{
 
     /**
      * Affiche les questions pour que l'utilisateur remplisse le formulaire d'inscription, enregistre les réponses,
-     * vérifie si elles sont valides et retourne le formulaire d'inscprition si valides.
-     * @param courses les cours offerts à la session précisée précédement
+     * vérifie si elles sont valides et retourne le formulaire d'inscription si valide.
+     * @param courses les cours offerts à la session précisée précédemment
      * @return le formulaire d'inscription
      */
 
@@ -108,16 +135,16 @@ public class ClientCmdLineLauncher extends Client{
         Course chosenCourse;
         do {
             //Demander à l'utilisateur de saisir les informations pour s'inscrire
-            ClientCmdLineLauncher.showQuestion("Veuillez saisir votre prénom:");
-            firstName = ClientCmdLineLauncher.getAnswer();
-            ClientCmdLineLauncher.showQuestion("Veuillez saisir votre nom:");
-            lastName = ClientCmdLineLauncher.getAnswer();
-            ClientCmdLineLauncher.showQuestion("Veuillez saisir votre email:");
-            email = ClientCmdLineLauncher.getAnswer();
-            ClientCmdLineLauncher.showQuestion("Veuillez saisir votre matricule:");
-            matricule = ClientCmdLineLauncher.getAnswer();
-            ClientCmdLineLauncher.showQuestion("Veuillez saisir le code du cours:");
-            courseCode = ClientCmdLineLauncher.getAnswer();
+            showQuestion("Veuillez saisir votre prénom:");
+            firstName = getAnswer();
+            showQuestion("Veuillez saisir votre nom:");
+            lastName = getAnswer();
+            showQuestion("Veuillez saisir votre email:");
+            email = getAnswer();
+            showQuestion("Veuillez saisir votre matricule:");
+            matricule = getAnswer();
+            showQuestion("Veuillez saisir le code du cours:");
+            courseCode = getAnswer();
 
             // Verifier si les informations sont valides
             errorMsg = "";
@@ -153,21 +180,20 @@ public class ClientCmdLineLauncher extends Client{
     }
 
     /**
-     * Affiche le menu principal et permet à l'utilisateur d'inscrire.
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * Affiche le menu principal et demande à l'utilisateur de choisir une action.
+     * @throws IOException si la connexion avec le serveur est perdue
+     * @throws ClassNotFoundException si le serveur envoie un objet de type inconnu
      */
-
-    public void inscrire() throws IOException, ClassNotFoundException {
-        // Demander à l'utilisateur de choisir une session et recuperer la liste des cours
+    public void inscrireOuConsulter() throws IOException, ClassNotFoundException {
+        // Demander à l'utilisateur de choisir une session et récupérer la liste des cours
         ArrayList<Course> courses = this.askSessionChoice();
         String nextAction;
 
         do {
-            ClientCmdLineLauncher.showQuestion("Veuillez choisir la prochaine action:",
-                new String[]{"Consulter les cours offerts par une autre session", "Inscription à un cours"});
-
-            nextAction = ClientCmdLineLauncher.getAnswer().toLowerCase();
+            nextAction = loopForValidInput("Veuillez choisir la prochaine action:",
+                    new String[]{"Consulter les cours offerts par une autre session", "Inscription à un cours"},
+                    new String[]{"1", "2"},
+                    "Veuillez choisir une action valide.");
 
             switch (nextAction) {
                 case "1" -> courses = this.askSessionChoice();
@@ -177,10 +203,9 @@ public class ClientCmdLineLauncher extends Client{
                     this.send("INSCRIRE");
                     this.send(form);
 
-                    // Afficher le resultat de l'inscription
+                    // Afficher le résultat de l'inscription
                     this.showConfirmation(form.getPrenom(), form.getCourse().getCode());
                 }
-                default -> System.out.println("Veuillez choisir une action valide.");
             }
         } while (!nextAction.equals("2"));
     }
@@ -191,19 +216,11 @@ public class ClientCmdLineLauncher extends Client{
         String nextAction;
         do {
             // Demander à l'utilisateur de s'inscrire
-            client.inscrire();
-
-            ClientCmdLineLauncher.showQuestion("Voulez-vous faire une autre inscription?", new String[]{"Oui", "Non"});
-            // Verifier si l'utilisateur a choisi une action valide
-            boolean validAnswer = true;
-            do {
-                nextAction = ClientCmdLineLauncher.getAnswer().toLowerCase();
-                if (!nextAction.equals("1") && !nextAction.equals("2")){
-                    validAnswer = false;
-                    System.out.println("Veuillez choisir une action valide.");
-                }
-            } while (!validAnswer);
-
+            client.inscrireOuConsulter();
+            nextAction = loopForValidInput("Voulez-vous faire une autre inscription?",
+                    new String[]{"Oui", "Non"},
+                    new String[]{"1", "2"},
+                    "Veuillez choisir une action valide.");
             // Continuer si l'utilisateur a choisi "Oui"
         } while (nextAction.equals("1"));
         System.out.println("Merci d'utiliser le système d'inscription de l'UdeM. Au revoir!");

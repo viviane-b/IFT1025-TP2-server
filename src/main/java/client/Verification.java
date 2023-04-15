@@ -1,6 +1,5 @@
 package client;
 
-
 public class Verification {
     /**
      * @param email
@@ -25,5 +24,4 @@ public class Verification {
     public static boolean verifyName(String firstName) {
         return !(firstName.equals(""));
     }
-
 }
